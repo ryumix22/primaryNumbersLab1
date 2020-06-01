@@ -57,7 +57,7 @@ public class Main {
                 System.out.printf("%d ", i + start);
             }
         }
-        System.out.println("программа выполнялась " + timeSpent + " милисек");
+        System.out.println("time spend " + timeSpent + " milisec");
         in.close();
     }
 }
