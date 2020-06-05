@@ -1,63 +1,66 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
     static int start;
     static int end;
 
-    int sqrtOfEnd = (int) Math.ceil(Math.sqrt(end));
-    List<Integer> primeNums = new ArrayList<>();
-    boolean[] isPrime = new boolean[end - start + 1];
-
-    private void fillPrime(){
-        boolean[] tmp = new boolean[sqrtOfEnd];
+    public void fillPrime(){
+        boolean[] tmp = new boolean[end];
         Arrays.fill(tmp, true);
         tmp[1] = false;
-        for (int i=2; i*i < sqrtOfEnd; i++) {
+        for (int i=2; i*i < end; i++) {
             if (tmp[i]) {
-                for (int j=i*i; j < sqrtOfEnd; j+=i) tmp[j] = false;
+                for (int j=i*i; j < end; j+=i) {
+                    tmp[j] = false;
+                }
             }
         }
-        for (int i = 1; i < sqrtOfEnd; i++) {
-            if (tmp[i]) primeNums.add(i);
+        for (int i = start; i < end; i++) {
+            if(tmp[i]) {
+                System.out.println(" " + i);
+            }
         }
     }
-
-    public boolean[] sieve(){
-        fillPrime();
-        Arrays.fill(isPrime, true);
-        for (int i = 0; i < primeNums.size(); i++) {
-            int h = start % primeNums.get(i);
-            int j = h == 0 ? 0 : primeNums.get(i) - h;
-            for (; j<=end - start; j+= primeNums.get(i)) isPrime[j] = false;
-        }
-        return isPrime;
-    }
-
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
+        boolean inputValid = true;
+        boolean inputValid2 = true;
         do {
             System.out.println("start must be < then end");
-            System.out.println("enter start point");
-            start = in.nextInt();
-            System.out.println("enter end point");
-            end = in.nextInt();
+            do {
+                try {
+                    System.out.println("enter start point");
+                    if((start = in.nextInt()) <= 0) {
+                        throw new ArrayIndexOutOfBoundsException();
+                    }
+                    inputValid = false;
+                } catch (InputMismatchException ex) {
+                    System.out.println("wrong input, try again");
+                    in.next();
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    System.out.println("negative num, try again");
+                }
+            } while(inputValid);
+            do {
+                try {
+                    System.out.println("enter end point");
+                    if((end = in.nextInt()) <= 0) {
+                        throw new ArrayIndexOutOfBoundsException();
+                    }
+                    inputValid2 = false;
+                } catch (InputMismatchException ex) {
+                    System.out.println("wrong input");
+                    in.next();
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    System.out.println("negative num");
+                }
+            } while(inputValid2);
         } while (start >= end);
         System.out.println("");
         Main test = new Main();
-        long startTime = System.currentTimeMillis();
-        boolean[] arrayPrimes = test.sieve();
-        long timeSpent = System.currentTimeMillis() - startTime;
-        for (int i = 0; i < arrayPrimes.length; i++) {
-            if (arrayPrimes[i]) {
-                System.out.printf("%d ", i + start);
-            }
-        }
-        System.out.println("time spend " + timeSpent + " milisec");
+        test.fillPrime();
         in.close();
     }
 }
